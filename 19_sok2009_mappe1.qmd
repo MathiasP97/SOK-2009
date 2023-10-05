@@ -1,0 +1,185 @@
+---
+title: "19_sok2009_mappe1"
+author: "19"
+format: html
+editor: visual
+---
+
+```{r}
+
+rm(list=ls())
+
+library(tidyverse)
+library(Ecdat)
+```
+
+Oppgave 4.1
+
+```{r}
+
+# Mulige utfall for en terning
+terning <- 6
+
+# Mulige utfall for to terninger
+enterning <- expand.grid(1:terning)
+
+# Summen av hver kombinasjon
+sums <- rowSums(enterning)
+
+# Kalkuler sannsynligheten for hver sum
+prob <- table(sums) / length(sums)
+
+# Lager en dataframe med summene og sannsynlighetene
+prob.dist <- data.frame(sums = as.integer(names(prob)),
+                        prob = as.numeric(prob))
+
+# Enkel graf
+ggplot(prob.dist, aes(x = sums, y = prob)) +
+  geom_col() +
+  scale_x_continuous(breaks = seq(1, 6, by = 1), 
+                     labels = seq(1, 6, by = 1))
+```
+
+Vi ser ovenfor at en seksidet trening har en 0.166 sjanse for å lande på hver side av seg selv. Altså har hver side like stor sansynelighet for å bli landet på.
+
+```{r}
+
+# Mulige utfall for to terninger
+toterning <- expand.grid(1:terning, 1:terning)
+
+# Summen av hver kombinasjon
+sums <- rowSums(toterning)
+
+# Kalkuler sannsynligheten for hver sum
+prob <- table(sums) / length(sums)
+
+# Lager en dataframe med summene og sannsynlighetene
+prob.dist <- data.frame(sums = as.integer(names(prob)),
+                        prob = as.numeric(prob))
+
+# Enkel graf
+ggplot(prob.dist, aes(x = sums, y = prob)) +
+  geom_col() +
+  scale_x_continuous(breaks = seq(2, 12, by = 1), 
+                     labels = seq(2, 12, by = 1))
+```
+
+Ovenfor her ser vi sannsynligheten for å få hver av verdiene til to seksidede terninger. Vi ser at 7 er den med størst sannsynlighet. Dette kommer av at på to terninger så er det flere komboer av forskjellige tall som gir 7 en noen andre tall og har samme sannsynlighet som hvert utfall har på én terning. Resten av tallene har mye mindre sannsynlighet en 7.
+
+Datasett1 har en positiv sannsynlighet for å være generert av én seksidet terning ettersom at verdien 1 har vært observert i dette datasettet. Hadde det vært brukt to treninger ser vi over at den laveste mulige verdien ville vært 2. Ser vi på plottet med én terning så har vi mulighet for å få verdi 1.
+
+Datasett2 har en positiv sannsynlighet for å være generert av én seksidet terning ettersom at sannsyneligheten for å få tallene fra datasett2 via bare én terning er mye høyere enn når man bruker to terninger. Dette ser vi med å se på plottene over som viser sansynligheten for å få hver mulige verdi tilgjengelig med én og to terninger.
+
+Datasett3 har en positiv sannsynlighet for å være generert av to seksidete terninger ettersom at verdien 8 er blitt observert. Vi ser i plottene ovenfor som viser de mulige utfallene for én terning og to terninger. Vi ser dat at det ikke er mulig å få 8 fra kun én terning. Derfor er det positvt sannsynlig at datasett3 er generert av to terninger.
+
+Sjanse med én terning = 1/6 = 0.16666
+
+Sjanse med to terninger = 1/36 = 0.02777
+
+Oppgave 4.2
+
+d1 = Datasett1
+
+d2 = Datasett2
+
+d3 = Datasett3
+
+```{r}
+
+#Lager datasett ut av de forskjellige eksemplene og tar gjennomsnittet av dem.
+
+d1 <- c(1,2,4,5)
+
+d2 <- c(5,6)
+
+d3 <- c(6,8,4,5)
+
+d1mean <- mean(d1)
+
+d2mean <- mean(d2)
+
+d3mean <- mean(d3)
+```
+
+```{r}
+
+#Bruker gjennomsnittet og intervallfrekvensen for å regne ut variansen.
+
+vard1 <- ((1-3)^2)*1/6+((2-3)^2)*1/6+((4-3)^2)*1/6+((5-3)^2)*1/6
+
+vard2 <- ((5-5.5)^2)*1/6+((6-5.5)^2)*1/6
+
+vard3 <- ((6-5.75)^2)*1/36+((8-5.75)^2)*1/36+((4-5.75)^2)*1/36+((5-5.75)^2)*1/36
+```
+
+```{r}
+
+#Tar kvadratroten av variansen for å få standardavvik.
+
+sd1 <- sqrt(vard1)
+
+sd2 <- sqrt(vard2)
+
+sd3 <- sqrt(vard3)
+```
+
+Gjennomsnittet for de forskjellige datasettene:
+
+Datasett1: 3
+
+Datasett2: 5.5
+
+Datasett3: 5.75
+
+Standardavviket for de forskjellige datasettene:
+
+Datasett1: 1.290
+
+Datasett2: 0.288
+
+Datasett3: 0.493
+
+Oppgave 4.3
+
+```{r}
+#Forventningen til antall prikker på en seksidet terning er:
+
+forventning1tk <- ((1*(1/6)) + (2*(1/6)) + (3*(1/6)) + (4*(1/6)) + (5*(1/6)) + (6*(1/6)))
+
+show(forventning1tk)
+```
+
+En terning har 21 prikker. Vi adderer alle sidene sammen og får på den måten summen av alle prikkene. Deler vi dem på 6 får vi forventingen. Ovenfor ser vi utregningen på forventningen til antall prikker på en seksidet trening. Forventningen eller gjennomsnittet er 3.5. Ved bruk av disse tallene kan vi måle standard avviket for alle sidene til en terning.
+
+```{r}
+#Her regner vi ut variansen av et terningkast
+vard4 <- ((1-3.5)^2)*1/6+((2-3.5)^2)*1/6+((4-3.5)^2)*1/6+((5-3.5)^2)*1/6
+
+#Tar kvadratroten av variansen for å få standardavviket.
+sd4 <- sqrt(vard4)
+sd4
+```
+
+Etter vi har gjort utregningen over ser vi at standardavviket for antall prikker på en terning er 1.354.
+
+```{r}
+#Summen av øyne på to seksidete terninger. Vi summerer hvert utfall to terninger kan gi.
+
+toterning$sum <- rowSums(toterning)
+```
+
+Oppgave 4.4
+
+Litt lengre opp har vi regnet ut at forventningen til en terning er 3.5. To terninger kastet to ganger er det samme som forventningen til én terning kastet fire ganger. Så forventningen til to terninger kastet to ganger er det samme som 3.5 \* 4 = 14. Forventningen til to terninger kastet to ganger = 14.
+
+Forventingen til én terning kastet to ganger gir oss regnestykket 3.5 \* 2 = 7. Altså, forventningen til én terning kastet to ganger = 7.
+
+Oppgave 4.5
+
+Sannsynligheten for å observere datasettet med bare én terning er 2/6 ettersom at det kun er to utfall som gir de ettertraktede tallene og at terningen er uavhenging. Altså er sannsyneligheten 1/6 for 5 og 1/6 for 6. Derfor er det 2/6 sammenlagt. Altså sannsynligheten for å få fem = 0.1666 = 16.6%. Og sannsynligheten for å få seks = 0.1666 = 16.6%. Sammenlangt 2/6 = 0.33 = 33%. Dette vil si at vi har en 1/3 eller 33% sjanse for å få fem eller seks med en terning.
+
+Det er fire mulige kombinasjoner som gir fem med to ternigner. Altså vi har 4/36 = 0.111 = 11.1% sjanse for å få fem med to terninger. Sjansen for å få seks er gitt som 5/36 = 0.138 = 13.8% sjanse for å få seks med to terninger. Dette er pga at det er fem kombinasjoner som gir seks med to terninger.
+
+Hvis vi da tar 4/36 = 11.1% sjanse for å få en kombinasjon som gir oss fem og 5/36 = 13.8% sjanse for å få en kombo som gir oss seks. Sammenlagt er disse 9/36 = 0.25. Altså er det en 25% sjanse for å få en kombo som gir enten fem eller seks med to terninger.
+
+Tar vi (2/6)-(9/36) = 0.08333333. Altså så har vi en 8.3% større sjanse for å få de ettertraktede tallene med én terning i forhold til to hva vi har med to terninger. Altså ser vi at det er en høyere prosent sjanse å få 5 eller 6 med én terning enn det er med to terninger.
